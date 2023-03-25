@@ -5,8 +5,15 @@ export interface IProduct {
   purchasePrice: number;
   sellingPrice: number;
 }
+
 export interface ITotal {
   quantity: number;
   purchasePrice: number;
   sellingPrice: number;
 }
+
+export interface IMany {
+  id: number;
+  many: number;
+}
+

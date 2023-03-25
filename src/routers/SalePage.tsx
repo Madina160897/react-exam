@@ -2,7 +2,7 @@ import React, { FC, useEffect, useState } from 'react'
 import { Link } from "react-router-dom"
 import { useSelector } from "react-redux";
 import { RootState } from "../store";
-import { IProduct } from "../types";
+import { IProduct, IMany } from "../types";
 import { useDispatch } from "react-redux";
 import { deleteProductAction } from "../actions/productsActions";
 
@@ -19,6 +19,10 @@ const SalePage = () => {
     sellingPrice: products.reduce((prev, curr) => { return prev + curr.sellingPrice }, 0),
     quantity: products.reduce((prev, curr) => { return prev + curr.quantity }, 0)
   })
+
+  const many = useSelector<RootState, IMany[]>(
+    (state) => state.many.list
+  );
 
   useEffect(() => {
     setTotal({
@@ -53,6 +57,16 @@ const SalePage = () => {
         </Link>
       </div>
       <div className="block-products">
+
+        <h1>Деньги на складе</h1>
+        <div>
+        {many.map((item) => (
+          <div key={item.id}>
+            <div className='many'>{item.many}</div>
+          </div>
+        ))}
+      </div>
+        
         <h1>Продукты:</h1>
 
         <table>

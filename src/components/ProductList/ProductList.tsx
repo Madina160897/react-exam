@@ -1,8 +1,7 @@
 import { useSelector } from "react-redux";
 import { RootState } from "../../store";
-import { IProduct } from "../../types";
+import { IProduct, IMany } from "../../types";
 import { useDispatch } from "react-redux";
-import { deleteProductAction } from "../../actions/productsActions";
 import React, { FC, useEffect, useState } from 'react'
 
 interface IProductList {
@@ -22,7 +21,9 @@ const ProductList: FC<IProductList> = () => {
     quantity: products.reduce((prev, curr) => { return prev + curr.quantity }, 0)
   })
 
-  const many = 10000
+  const many = useSelector<RootState, IMany[]>(
+    (state) => state.many.list
+  );
 
   useEffect(() => {
     setTotal({
@@ -34,7 +35,13 @@ const ProductList: FC<IProductList> = () => {
 
   return (
     <div className="block-products">
-      <div className='many'>{many}</div>
+      <div>
+        {many.map((item) => (
+          <div key={item.id}>
+            <div className='many'>{item.many}</div>
+          </div>
+        ))}
+      </div>
       <h1>Продукты:</h1>
 
       <table>
@@ -60,10 +67,6 @@ const ProductList: FC<IProductList> = () => {
 
             <th>
               Цена продажи
-            </th>
-
-            <th>
-              Удалить
             </th>
 
           </tr>
@@ -92,33 +95,26 @@ const ProductList: FC<IProductList> = () => {
               <td>
                 {item.sellingPrice}
               </td>
-              <td>
-                <div>
-                  {/* @ts-ignore */}
-                  <button className="btn-mini" onClick={() => { dispatch(deleteProductAction(item.id)) }}>X</button>
-                </div>
-              </td>
-
             </tr>
           ))}
           <tr>
-              <th>
-                Итого
-              </th>
-              <th>
+            <th>
+              Итого
+            </th>
+            <th>
 
-              </th>
-              <th>
-                {total.quantity}
-              </th>
+            </th>
+            <th>
+              {total.quantity}
+            </th>
 
-              <th>
+            <th>
               {total.purchasePrice}
-              </th>
-              <th>
+            </th>
+            <th>
               {total.sellingPrice}
-              </th>
-            </tr>
+            </th>
+          </tr>
         </tbody>
       </table>
     </div>

@@ -1,5 +1,6 @@
 import { configureStore, combineReducers } from "@reduxjs/toolkit";
 import { productsReducer } from "./reducers/productsReducer";
+import { manyReducer } from "./reducers/productsReducer";
 import { 
   persistStore, 
   persistReducer,
@@ -15,10 +16,12 @@ import storage from 'redux-persist/lib/storage';
 
 const rootReducer = combineReducers({
   products: productsReducer,
+  many: manyReducer,
 });
 
 const persistConfig = {
   key: 'root',
+  key1: 'many',
   storage,
 }
 

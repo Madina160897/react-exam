@@ -1,30 +1,63 @@
 import { createReducer } from "@reduxjs/toolkit";
-import { createProductAction, deleteProductAction, editProductAction, totalProductAction } from "../actions/productsActions";
+import { createProductAction, deleteProductAction, editProductAction } from "../actions/productsActions";
+import { createManyAction, deleteManyAction, editManyAction } from "../actions/manyActions";
+
 const initialState = {
   list: [{ id: 1, name: "Milk", quantity: 1, purchasePrice: 1000, sellingPrice: 1230 }],
 };
 
+const manyState = {
+  list: [{ id: 1, many: 10000 }],
+};
+
+const sellingPrice = {
+  price: [{}]
+}
+
 export const productsReducer = createReducer(initialState, (builder) => {
   builder
     .addCase(createProductAction, (state, action) => {
-      for (let i = 0; i < state.list.length; i++) {
-        if ( action.payload.name === state.list[i].name) {
-          state.list[i].quantity = action.payload.quantity
-          state.list[i].purchasePrice = action.payload.purchasePrice
-          state.list[i].sellingPrice = action.payload.sellingPrice
-          return
-        } else if ( action.payload.name !== state.list[i].name) {
-          state.list.push({
-            ...action.payload,
-            id: state.list.length + Math.ceil(Math.random()),
-          });
+      if (state.list.find(item => item.name.toLowerCase() === action.payload.name.toLowerCase())) {
+        state.list = state.list.map((item) => item.name.toLowerCase() === action.payload.name.toLowerCase() ? {
+          id: item.id,
+          name: item.name,
+          purchasePrice: action.payload.purchasePrice,
+          sellingPrice: action.payload.sellingPrice,
+          quantity: item.quantity + action.payload.quantity,
         }
+          : item
+        )
+      } else {
+
+        state.list.push({
+          ...action.payload,
+          id: state.list.length + Math.ceil(Math.random()),
+        })
       }
     })
     .addCase(deleteProductAction, (state, action) => {
+      const pri = state.list.find(item => item.id !== action.payload)
+      // sellingPrice.price.push(pri?.sellingPrice)
       state.list = state.list.filter(item => item.id !== action.payload)
     })
     .addCase(editProductAction, (state, action) => {
       state.list = state.list.map(item => ((item.id !== action.payload.id) ? item : action.payload))
     })
-});
+  })
+
+
+  export const manyReducer = createReducer(manyState, (builder) => {
+    builder
+      .addCase(createManyAction, (state, action) => {
+        state.list.push({
+          ...action.payload,
+          id: state.list.length + Math.ceil(Math.random()),
+        })
+      })
+      .addCase(deleteManyAction, (state, action) => {
+        state.list = state.list.filter(item => item.id !== action.payload)
+      })
+      .addCase(editManyAction, (state, action) => {
+        state.list = state.list.map(item => ((item.id !== action.payload.id) ? item : action.payload))
+      })
+  });
