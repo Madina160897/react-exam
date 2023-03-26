@@ -1,15 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import { useSelector } from "react-redux";
 import { RootState } from "../store";
-import { IProduct } from "../types/index";
-import { useDispatch } from "react-redux";
-import { deleteProductAction, totalProductAction } from "../actions/productsActions";
+import { IProduct, IMany, ITotal } from "../types/index";
 import { EditProduct, AddProductForm } from "../components/index";
 import { Link } from "react-router-dom"
 
 
 const PurchasePage = () => {
-  const dispatch = useDispatch();
 
   const products = useSelector<RootState, IProduct[]>(
     (state) => state.products.list
@@ -20,6 +17,10 @@ const PurchasePage = () => {
     sellingPrice: products.reduce((prev, curr) => { return prev + curr.sellingPrice }, 0),
     quantity: products.reduce((prev, curr) => { return prev + curr.quantity }, 0)
   })
+
+  const many = useSelector<RootState, IMany[]>(
+    (state) => state.many.list
+  );
 
   useEffect(() => {
     setTotal({
@@ -49,14 +50,24 @@ const PurchasePage = () => {
         </Link>
         <Link to='/data'>
           <div>
-            <b> Данные </b>
+            <b> Операции </b>
           </div>
         </Link>
       </div>
+
+      <h1>Деньги на складе</h1>
+      <div>
+        {many.map((item) => (
+          <div key={item.many}>
+            <div className='many'>{item.many - total.purchasePrice}</div>
+          </div>
+        ))}
+      </div>
+
       <h1>Продукты:</h1>
       {/* @ts-ignore */}
       <AddProductForm />
-      
+
 
       <table>
         <thead>
@@ -81,7 +92,6 @@ const PurchasePage = () => {
               Цена продажи
             </th>
             <th>
-              <div>Удалить</div>
               <div> Изменить</div>
             </th>
           </tr>
@@ -109,33 +119,31 @@ const PurchasePage = () => {
               </td>
 
               <td>
-                <div>
-                  {/* @ts-ignore */}
-                  <button className="btn-mini" onClick={() => { dispatch(deleteProductAction(item.id)) }}>X</button>
-                </div>
                 {/* @ts-ignore */}
                 <EditProduct id={item.id} />
               </td>
             </tr>
           ))}
-          <tr>
-              <th>
-                Итого
-              </th>
-              <th>
 
-              </th>
-              <th>
-                {total.quantity}
-              </th>
+          <tr key={total.quantity}>
+            <th>
+              Итого
+            </th>
+            <th>
 
-              <th>
+            </th>
+            <th>
+              {total.quantity}
+            </th>
+
+            <th>
               {total.purchasePrice}
-              </th>
-              <th>
+            </th>
+            <th>
               {total.sellingPrice}
-              </th>
-            </tr>
+            </th>
+          </tr>
+
         </tbody>
       </table>
     </div>

@@ -1,6 +1,6 @@
 import { useSelector } from "react-redux";
 import { RootState } from "../../store";
-import { IProduct, IMany } from "../../types";
+import { IProduct, IMany, ITotal } from "../../types";
 import { useDispatch } from "react-redux";
 import React, { FC, useEffect, useState } from 'react'
 
@@ -25,6 +25,7 @@ const ProductList: FC<IProductList> = () => {
     (state) => state.many.list
   );
 
+
   useEffect(() => {
     setTotal({
       purchasePrice: products.reduce((prev, curr) => { return prev + curr.purchasePrice }, 0),
@@ -37,8 +38,8 @@ const ProductList: FC<IProductList> = () => {
     <div className="block-products">
       <div>
         {many.map((item) => (
-          <div key={item.id}>
-            <div className='many'>{item.many}</div>
+          <div key={item.many}>
+            <div className='many'>{(item.many - total.purchasePrice) + total.sellingPrice}</div>
           </div>
         ))}
       </div>
@@ -97,7 +98,8 @@ const ProductList: FC<IProductList> = () => {
               </td>
             </tr>
           ))}
-          <tr>
+
+          <tr key={total.quantity}>
             <th>
               Итого
             </th>
@@ -115,6 +117,7 @@ const ProductList: FC<IProductList> = () => {
               {total.sellingPrice}
             </th>
           </tr>
+
         </tbody>
       </table>
     </div>

@@ -24,7 +24,7 @@ const StockPage = () => {
         </Link>
         <Link to='/data'>
           <div>
-            <b> Данные </b>
+            <b> Операции </b>
           </div>
         </Link>
       </div>

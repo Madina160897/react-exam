@@ -25,7 +25,7 @@ const MainPage = () => {
                     </Link> <br />
                     <Link to='/data'>
                         <div className='box-header'>
-                            <b> Данные </b>
+                            <b> Операции </b>
                         </div>
                     </Link>
                 </div>

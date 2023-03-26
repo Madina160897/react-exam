@@ -1,6 +1,5 @@
 import { configureStore, combineReducers } from "@reduxjs/toolkit";
-import { productsReducer } from "./reducers/productsReducer";
-import { manyReducer } from "./reducers/productsReducer";
+import { productsReducer, manyReducer, totalReducer } from "./reducers/productsReducer";
 import { 
   persistStore, 
   persistReducer,
@@ -17,11 +16,13 @@ import storage from 'redux-persist/lib/storage';
 const rootReducer = combineReducers({
   products: productsReducer,
   many: manyReducer,
+  total: totalReducer,
 });
 
 const persistConfig = {
   key: 'root',
   key1: 'many',
+  key2: 'total',
   storage,
 }
 
