@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "../store";
 import { IProduct, IMany, ITotal } from "../types";
 import { useDispatch } from "react-redux";
-import { deleteProductAction, totalProductAction } from "../actions/productsActions";
+import { deleteProductAction } from "../actions/productsActions";
 
 
 const SalePage = () => {
@@ -14,24 +14,13 @@ const SalePage = () => {
     (state) => state.products.list
   );
 
-  // const total = useSelector<RootState, ITotal[]>(
-  //   (state) => state.total.list
-  // );
-
-  const [total] = useState({
-    purchasePrice: products.reduce((prev, curr) => { return prev + curr.purchasePrice }, 0),
-    sellingPrice: products.reduce((prev, curr) => { return prev + curr.sellingPrice }, 0),
-    quantity: products.reduce((prev, curr) => { return prev + curr.quantity }, 0)
-  })
-
-  const many = useSelector<RootState, IMany[]>(
-    (state) => state.many.list
+  const total = useSelector<RootState, ITotal[]>(
+    (state) => state.products.total
   );
 
-  useEffect(() => {
-    dispatch(totalProductAction(total))
-  }, [dispatch])
-
+  const many = useSelector<RootState, IMany[]>(
+    (state) => state.products.many
+  );
   return (
     <>
       <div className="header-page df jc-sa ai-c">
@@ -60,9 +49,9 @@ const SalePage = () => {
 
         <h1>Деньги на складе</h1>
         <div>
-          {many.map((item) => (
-            <div key={item.many}>
-              <div className='many'>{item.many + total.sellingPrice}</div>
+          {many?.map((item) => (
+            <div key={item.manyState}>
+              <div className='many'>{item.manyState}</div>
             </div>
           ))}
         </div>
@@ -127,14 +116,25 @@ const SalePage = () => {
                 <td>
                   <div>
                     {/* @ts-ignore */}
-                    <button className="btn-mini" onClick={() => { dispatch(deleteProductAction(item.id)) }}>Продать</button>
+                    <button className="btn-mini" onClick={() => {
+                      dispatch(
+                        deleteProductAction({
+                          id: item.id,
+                          name: item.name,
+                          quantity: item.quantity,
+                          purchasePrice: item.purchasePrice,
+                          sellingPrice: item.sellingPrice
+                        })
+                      );
+                    }}>Продать</button>
                   </div>
                 </td>
 
               </tr>
             ))}
 
-            <tr key={total.quantity}>
+{total.map((item) => (
+            <tr key={item.quantity}>
               <th>
                 Итого
               </th>
@@ -142,17 +142,18 @@ const SalePage = () => {
 
               </th>
               <th>
-                {total.quantity}
+                {item.quantity}
               </th>
 
               <th>
-                {total.purchasePrice}
+                {item.purchasePrice}
               </th>
               <th>
-                {total.sellingPrice}
+                {item.sellingPrice}
               </th>
             </tr>
 
+          ))}
           </tbody>
         </table>
       </div>

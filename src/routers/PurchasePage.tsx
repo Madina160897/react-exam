@@ -12,23 +12,13 @@ const PurchasePage = () => {
     (state) => state.products.list
   );
 
-  const [total, setTotal] = useState({
-    purchasePrice: products.reduce((prev, curr) => { return prev + curr.purchasePrice }, 0),
-    sellingPrice: products.reduce((prev, curr) => { return prev + curr.sellingPrice }, 0),
-    quantity: products.reduce((prev, curr) => { return prev + curr.quantity }, 0)
-  })
-
-  const many = useSelector<RootState, IMany[]>(
-    (state) => state.many.list
+  const total = useSelector<RootState, ITotal[]>(
+    (state) => state.products.total
   );
 
-  useEffect(() => {
-    setTotal({
-      purchasePrice: products.reduce((prev, curr) => { return prev + curr.purchasePrice }, 0),
-      sellingPrice: products.reduce((prev, curr) => { return prev + curr.sellingPrice }, 0),
-      quantity: products.reduce((prev, curr) => { return prev + curr.quantity }, 0)
-    })
-  }, [products])
+  const many = useSelector<RootState, IMany[]>(
+    (state) => state.products.many
+  );
 
   return (
     <div className="block-products">
@@ -57,9 +47,9 @@ const PurchasePage = () => {
 
       <h1>Деньги на складе</h1>
       <div>
-        {many.map((item) => (
-          <div key={item.many}>
-            <div className='many'>{item.many - total.purchasePrice}</div>
+        {many?.map((item) => (
+          <div key={item.manyState}>
+            <div className='many'>{item.manyState}</div>
           </div>
         ))}
       </div>
@@ -125,25 +115,27 @@ const PurchasePage = () => {
             </tr>
           ))}
 
-          <tr key={total.quantity}>
-            <th>
-              Итого
-            </th>
-            <th>
+{total.map((item) => (
+            <tr key={item.quantity}>
+              <th>
+                Итого
+              </th>
+              <th>
 
-            </th>
-            <th>
-              {total.quantity}
-            </th>
+              </th>
+              <th>
+                {item.quantity}
+              </th>
 
-            <th>
-              {total.purchasePrice}
-            </th>
-            <th>
-              {total.sellingPrice}
-            </th>
-          </tr>
+              <th>
+                {item.purchasePrice}
+              </th>
+              <th>
+                {item.sellingPrice}
+              </th>
+            </tr>
 
+          ))}
         </tbody>
       </table>
     </div>

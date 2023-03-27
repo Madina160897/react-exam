@@ -13,21 +13,5 @@ export interface ITotal {
 }
 
 export interface IMany {
-  many: number;
-}
-
-export interface ISale {
-  id: number;
-  name: string;
-  quantity: number;
-  purchasePrice: number;
-  sellingPrice: number;
-}
-
-export interface IPurchase {
-  id: number;
-  name: string;
-  quantity: number;
-  purchasePrice: number;
-  sellingPrice: number;
+  manyState: number;
 }

@@ -46,11 +46,14 @@ button {
     border-radius: 10px;
 }
 
-/* .flex{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-} */
+.add-product-block{
+    text-align: center;
+}
+
+.table-block{
+    width: 800px;
+    margin: 0 auto;
+}
 
 .text-edit {
     color: rgb(26, 189, 110);
@@ -202,3 +205,8 @@ a {
     border-radius: 20px;
     box-shadow: 5px 5px 5px 0px rgba(189, 184, 184, 0.3);
   } */
+  .chart-block{
+    width: 500px;
+    height: 500px;
+    margin: 50px;
+  }
